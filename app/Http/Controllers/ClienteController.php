@@ -9,6 +9,13 @@ use DB;
 
 class ClienteController extends Controller
 {
+    public function index()
+    {
+        $clientes = Cliente::get();
+
+        return view('clientes.index', compact('clientes'));
+    }
+
     public function create()
     {
         
@@ -33,11 +40,54 @@ class ClienteController extends Controller
                 'nome' => $request['cliente']['nome']
             ]);
             DB::commit();
-            return redirect('/')->with('success', 'Cliente cadastrado com sucesso!');
+            return redirect('clientes')->with('success', 'Cliente cadastrado com sucesso!');
         }
         catch(\Exception $e) {
             DB::rollback();
-            return redirect('/')->with('error', 'Erro no servidor! Cliente não cadastrado!');
+            return redirect('clientes')->with('error', 'Erro no servidor! Cliente não cadastrado!');
         }
+   }
+
+   public function edit($id)
+   {
+       $cliente = Cliente::findOrFail($id);
+       $data = [
+           'cliente' => $cliente,
+           'url' => 'clientes/'.$id,
+           'method' => 'PUT',
+       ];
+       return view('clientes.form', compact('data'));
+   }
+   
+   public function update(Request $request, $id)
+   {
+       $cliente = Cliente::findOrFail($id);
+
+       DB::beginTransaction();
+        try {
+
+            $cliente->update([
+                'nome' => $request['cliente']['nome']
+            ]);
+
+            DB::commit();
+            return redirect('clientes')->with('success', 'Cliente cadastrado com sucesso!');
+        }
+        catch(\Exception $e) {
+            DB::rollback();
+            return redirect('clientes')->with('error', 'Erro no servidor! Cliente não cadastrado!');
+        }
+   }
+
+   public function destroy($id)
+   {
+       $cliente = Cliente::withTrashed()->findOrFail($id);
+       if($cliente->trashed()) {
+           $cliente->restore();
+           return redirect('clientes')->with('success', 'Cliente ativado com sucesso!');
+       } else {
+           $cliente->delete();
+           return redirect('clientes')->with('success', 'Cliente desativado com sucesso!');
+       }
    }
 }

@@ -26,7 +26,7 @@
         <div class="collapse navbar-collapse" id="navbarToggler">
             <ul class="navbar-nav mt-2 mt-lg-0 ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="{{url('clientes/create')}}">Clientes</a>
+                <a class="nav-link" href="{{url('clientes')}}">Clientes</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{url('produtos')}}">Produto</a>
