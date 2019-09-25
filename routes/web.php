@@ -11,6 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'HomeController@index');
+
+Route::prefix('clientes')->group(function() {
+    
+    Route::get('create', 'ClienteController@create');
+    Route::post('/', 'ClienteController@store');
+
 });
