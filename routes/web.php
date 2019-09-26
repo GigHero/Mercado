@@ -31,3 +31,12 @@ Route::prefix('produtos')->group(function() {
     Route::put('{id}', 'ProdutoController@update');
     Route::delete('{id}', 'ProdutoController@destroy');
 });
+
+Route::prefix('compras')->group(function() {
+    Route::get('/', 'CompraController@index');
+   /* Route::get('create', 'ProdutoController@create');
+    Route::post('/', 'ProdutoController@store');
+    Route::get('{id}/edit', 'ProdutoController@edit');
+    Route::put('{id}', 'ProdutoController@update');
+    Route::delete('{id}', 'ProdutoController@destroy');*/
+});
