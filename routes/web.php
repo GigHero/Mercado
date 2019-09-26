@@ -21,3 +21,13 @@ Route::prefix('clientes')->group(function() {
     Route::put('{id}', 'ClienteController@update');
     Route::delete('{id}', 'ClienteController@destroy');
 });
+
+
+Route::prefix('produtos')->group(function() {
+    Route::get('/', 'ProdutoController@index');
+    Route::get('create', 'ProdutoController@create');
+    Route::post('/', 'ProdutoController@store');
+    Route::get('{id}/edit', 'ProdutoController@edit');
+    Route::put('{id}', 'ProdutoController@update');
+    Route::delete('{id}', 'ProdutoController@destroy');
+});
