@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\{Produto,Compra,Cliente};
 use Illuminate\Http\Request;
+use DB;
 
 class CompraController extends Controller
 {
@@ -12,8 +13,11 @@ class CompraController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        return view('compras.index');
+    {   
+
+        $compras = Compra::all();
+
+        return view('compras.index', compact('compras'));
     }
 
     /**
@@ -23,7 +27,14 @@ class CompraController extends Controller
      */
     public function create()
     {
-        //
+        $data = [
+            'url' => 'compras',
+            'method' => 'POST',
+        ];
+
+        $clientes = Cliente::get();
+        $produtos = Produto::get();
+        return view('compras.form', compact('produtos','clientes','data'));
     }
 
     /**
@@ -32,11 +43,27 @@ class CompraController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
-    }
+    public function store(Request $request) {
+        DB::beginTransaction();
+        try {
 
+            $produto = Produto::findOrFail($request->produto_id);
+             
+            $compras = Compra::create([
+                'data' => $request['compra']['data'],
+                'cliente_id' => $request['compra']['cliente_id']
+            ]);
+
+            $compras->Produtos()->attach($produto,array('quantidade'=>$request->quantidade));
+
+            DB::commit();
+            return view('compras.index')->with('success', 'Produto cadastrado com sucesso!');
+        }
+        catch(\Exception $e) {
+            DB::rollback();
+            return redirect('compras.index')->with('error', 'Erro no servidor! Produto não cadastrado!');
+        }
+     }
     /**
      * Display the specified resource.
      *

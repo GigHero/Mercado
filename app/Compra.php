@@ -13,4 +13,12 @@ class Compra extends Model
 
     protected $fillable = ['data', 'cliente_id'];
 
+    //Relacionamentos
+    public function Produtos() {
+        return $this->belongsToMany('App\Produto', 'produto_has_compra');
+    }
+    
+    public function Clientes() {
+        return $this->belongsTo('App\Cliente', 'cliente_id');
+    }
 }
